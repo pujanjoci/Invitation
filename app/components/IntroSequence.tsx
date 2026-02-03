@@ -7,16 +7,28 @@ import Image from 'next/image';
 export default function IntroSequence() {
   const [showVideo, setShowVideo] = useState(false);
   const [isClickable, setIsClickable] = useState(true);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
 
+  // Preload video on mount
   useEffect(() => {
-    if (showVideo && videoRef.current) {
+    const video = videoRef.current;
+    if (video) {
+      video.load();
+      const handleCanPlay = () => setVideoLoaded(true);
+      video.addEventListener('canplaythrough', handleCanPlay);
+      return () => video.removeEventListener('canplaythrough', handleCanPlay);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showVideo && videoRef.current && videoLoaded) {
       // Set playback speed to 0.8x
       videoRef.current.playbackRate = 0.8;
-      videoRef.current.play();
+      videoRef.current.play().catch(err => console.error('Video play error:', err));
     }
-  }, [showVideo]);
+  }, [showVideo, videoLoaded]);
 
   const handleClick = () => {
     if (!isClickable) return;
@@ -31,6 +43,17 @@ export default function IntroSequence() {
 
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
+      {/* Preload video (hidden) */}
+      <video
+        ref={videoRef}
+        src="/assets/intro-video.mp4"
+        className="hidden"
+        onEnded={handleVideoEnd}
+        playsInline
+        muted={false}
+        preload="auto"
+      />
+
       {!showVideo ? (
         // Image Display - Click anywhere to start
         <div
@@ -49,10 +72,9 @@ export default function IntroSequence() {
         // Video Display
         <div className="relative w-full h-full flex items-center justify-center bg-black">
           <video
-            ref={videoRef}
             src="/assets/intro-video.mp4"
             className="w-full h-full object-cover"
-            onEnded={handleVideoEnd}
+            autoPlay
             playsInline
             muted={false}
           />
