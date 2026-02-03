@@ -1,39 +1,46 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function IntroSequence() {
   const [showVideo, setShowVideo] = useState(false);
   const [isClickable, setIsClickable] = useState(true);
-  const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
 
-  // Preload video on mount
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.load();
-      const handleCanPlay = () => setVideoLoaded(true);
-      video.addEventListener('canplaythrough', handleCanPlay);
-      return () => video.removeEventListener('canplaythrough', handleCanPlay);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (showVideo && videoRef.current && videoLoaded) {
-      // Set playback speed to 0.8x
-      videoRef.current.playbackRate = 0.8;
-      videoRef.current.play().catch(err => console.error('Video play error:', err));
-    }
-  }, [showVideo, videoLoaded]);
-
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!isClickable) return;
     setIsClickable(false);
     setShowVideo(true);
+
+    // Wait for next tick to ensure video is mounted
+    await new Promise(resolve => setTimeout(resolve, 0));
+    
+    const video = videoRef.current;
+    if (video) {
+      // Set playback speed to 0.8x
+      video.playbackRate = 0.8;
+      
+      // Start muted for mobile autoplay compatibility, then unmute
+      video.muted = true;
+      const playPromise = video.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            // Unmute after playback starts successfully
+            video.muted = false;
+          })
+          .catch(err => {
+            console.error('Video play error:', err);
+            // If unmuted play fails, keep it muted
+            video.muted = true;
+            video.play();
+          });
+      }
+    }
   };
 
   const handleVideoEnd = () => {
@@ -43,17 +50,6 @@ export default function IntroSequence() {
 
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
-      {/* Preload video (hidden) */}
-      <video
-        ref={videoRef}
-        src="/assets/intro-video.mp4"
-        className="hidden"
-        onEnded={handleVideoEnd}
-        playsInline
-        muted={false}
-        preload="auto"
-      />
-
       {!showVideo ? (
         // Image Display - Click anywhere to start
         <div
@@ -69,14 +65,16 @@ export default function IntroSequence() {
           />
         </div>
       ) : (
-        // Video Display
+        // Video Display - Single video element with optimized settings
         <div className="relative w-full h-full flex items-center justify-center bg-black">
           <video
+            ref={videoRef}
             src="/assets/intro-video.mp4"
             className="w-full h-full object-cover"
-            autoPlay
+            poster="/assets/Intro-image.png"
             playsInline
-            muted={false}
+            preload="metadata"
+            onEnded={handleVideoEnd}
           />
         </div>
       )}
