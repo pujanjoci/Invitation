@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   description: 'You are cordially invited to celebrate the wedding of Sudha Joshi and Dilip Shrestha',
   keywords: ['wedding', 'invitation', 'Sudha Joshi', 'Dilip Shrestha', 'wedding invitation'],
   authors: [{ name: 'Sudha & Dilip' }],
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
   openGraph: {
     title: 'Sudha & Dilip - Wedding Invitation',
     description: 'You are cordially invited to celebrate the wedding of Sudha Joshi and Dilip Shrestha',

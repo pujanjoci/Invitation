@@ -4,7 +4,7 @@ import { Calendar, Clock, MapPin, Heart, Users, Mail, Phone, Shirt } from 'lucid
 
 export default function WeddingInvitation() {
   return (
-    <div className="bg-gradient-to-br from-stone-50 via-white to-rose-50/5 relative">
+    <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-rose-50/5 relative overflow-hidden">
       {/* Subtle background pattern */}
       <div 
         className="absolute inset-0 opacity-5"
