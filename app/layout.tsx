@@ -3,12 +3,12 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Sudha & Dilip - Wedding Invitation',
-  description: 'You are cordially invited to celebrate the union of Sudha Joshi and Dilip Shrestha on Saturday, December 25th, 2024 at Imperial Banquet, Sallaghari, Bhaktapur.',
+  description: 'You are cordially invited to celebrate the wedding of Sudha Joshi and Dilip Shrestha',
   keywords: ['wedding', 'invitation', 'Sudha Joshi', 'Dilip Shrestha', 'wedding invitation'],
   authors: [{ name: 'Sudha & Dilip' }],
   openGraph: {
     title: 'Sudha & Dilip - Wedding Invitation',
-    description: 'You are cordially invited to celebrate the union of Sudha Joshi and Dilip Shrestha on Saturday, December 25th, 2024.',
+    description: 'You are cordially invited to celebrate the wedding of Sudha Joshi and Dilip Shrestha',
     url: 'https://sudhabilip.com',
     siteName: 'Sudha & Dilip Wedding',
     images: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Sudha & Dilip - Wedding Invitation',
-    description: 'You are cordially invited to celebrate the union of Sudha Joshi and Dilip Shrestha on Saturday, December 25th, 2024.',
+    description: 'You are cordially invited to celebrate the wedding of Sudha Joshi and Dilip Shrestha',
     images: ['/assets/Intro-image.png'],
   },
 };
